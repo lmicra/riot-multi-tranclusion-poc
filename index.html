@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<script src="riot+compiler.min.js"></script>
+
+<title>Dicas Teste</title>
+
+<style>
+	div {
+		margin-left: 2em;
+	}
+</style>
+
+</head>
+
+<body>
+<dicas>
+	<yield to="content">
+		<dica title="Dica 1">
+			<yield to="summary">
+				<p>summary 1</p>
+			</yield>
+			<yield to="content">
+				<p>content 1</p>
+			</yield>
+		</dica>
+		<dica title="Dica 2">
+			<yield to="summary">
+				<p>summary 2</p>
+			</yield>
+			<yield to="content">
+				<p>content 2</p>
+				<p>content 2</p>
+			</yield>
+		</dica>
+		<dica title="Dica 3">
+			<yield to="summary">
+				<p>summary 3</p>
+			</yield>
+			<yield to="content">
+				<p>content 3</p>
+				<p>content 3</p>
+				<p>content 3</p>
+			</yield>
+		</dica>
+		<dica title="Dica 4">
+			<yield to="summary">
+				<p>summary 4</p>
+			</yield>
+			<yield to="content">
+				<p>content 4</p>
+				<p>content 4</p>
+				<p>content 4</p>
+				<p>content 4</p>
+			</yield>
+		</dica>
+		<dica title="Dica 5">
+			<yield to="summary">
+				<p>summary 5</p>
+			</yield>
+			<yield to="content">
+				<p>content 5</p>
+				<p>content 5</p>
+				<p>content 5</p>
+				<p>content 5</p>
+				<p>content 5</p>
+			</yield>
+		</dica>
+		<dica title="Dica 6">
+			<yield to="summary">
+				<p>summary 6</p>
+			</yield>
+			<yield to="content">
+				<p>content 6</p>
+				<p>content 6</p>
+				<p>content 6</p>
+				<p>content 6</p>
+				<p>content 6</p>
+				<p>content 6</p>
+			</yield>
+		</dica>
+	</yield>
+</dicas>
+<script>
+riot.tag2(
+	'dica',
+	'<h1>{opts.title}</h1>'+
+	'<div class="summary"><yield from="summary"></yield></div>'+
+	'<div class="{content: true, hidden: hide}"><yield from="content"></yield></div>'+
+	'<button onclick="{toggle}">show {hide ? \'more\' : \'less\'}</button>',
+	'dica .hidden,[riot-tag="dica"] .hidden { display: none; }',
+	'', function(opts) {
+		this.hide = true;
+
+		this.toggle = function() {
+			return this.hide = !this.hide;
+		};
+
+		this.jumpTo = function() {
+			return console.log('jumping to this dom element (jquery.animate)', this.root);
+		};
+	},
+	'{}');
+
+riot.tag2(
+	'dicas',
+	'<yield from="content"></yield>'+
+	'<div class="list"><ul>'+
+	'<virtual each="{dica in dicas}">'+
+	'<li><span onclick="{dica.jumpTo.bind(dica)}">{dica.opts.title}</span></li>'+
+	'<li><hr></li>'+
+	'</virtual>'+
+	'</ul></div>',
+	'', '', function(opts) {
+		this.on('before-mount', function() {
+			this.dicas = this.tags['dica'];
+			return this.update();
+		});
+	},
+	'{}');
+
+riot.mount('dicas');
+</script>
+</body>
+</html>
